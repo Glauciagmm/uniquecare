@@ -70,7 +70,7 @@ public class ContractServiceImpl implements IContractService {
         return null;
     }
 
-   /* @Override
+    @Override
     public Contract createContract(User client, User assistant) throws ContractException {
         if (client.getFriends().contains(assistant)) {
             throw new ContractException("Request are already accepted");

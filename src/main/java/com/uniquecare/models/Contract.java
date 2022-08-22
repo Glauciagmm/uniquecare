@@ -134,6 +134,7 @@ public class Contract {
                 ", start=" + start +
                 ", finish=" + finish +
                 ", totalPrice=" + totalPrice +
+                ", state=" + state +
                 ", facility=" + facility +
                 ", client=" + client +
                 '}';
