@@ -1,6 +1,7 @@
 package com.uniquecare.services;
 
 import com.uniquecare.models.Contract;
+import com.uniquecare.models.User;
 import com.uniquecare.repositories.ContractRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,5 +63,40 @@ public class ContractServiceImpl implements IContractService {
     @Override
     public List<Contract> getContractByAssistant(Long assistantId) {
         return userService.getContractByAssistantId(assistantId);
+    }
+
+    @Override
+    public Contract createContract(User client, User assistant) throws ContractException {
+        return null;
+    }
+
+   /* @Override
+    public Contract createContract(User client, User assistant) throws ContractException {
+        if (client.getFriends().contains(assistant)) {
+            throw new ContractException("Request are already accepted");
+        } else if (!contractRepository
+                .findByClientAssistantAndState(client, assistant, Contract.State.OPEN).isEmpty()) {
+            throw new ContractException("A pending request exists");
+        } else if (!contractRepository
+                .findByClientAssistantAndState(client, assistant, Contract.State.OPEN).isEmpty()) {
+            throw new ContractException("A pending request exists");
+        }
+        Contract request = new Contract();
+        request.setClient(client);
+        request.setAssistant(assistant);
+        request.setStrat(new Date());
+        request.setState(FriendshipRequest.State.OPEN);
+        friendshipRequestRepository.save(request);
+        return request;
+    }*/
+
+    @Override
+    public void acceptFriendshipRequest(Contract request, User assistant) throws ContractException {
+
+    }
+
+    @Override
+    public void declineFriendshipRequest(Contract request, User assistant) throws ContractException {
+
     }
 }

@@ -44,6 +44,9 @@ public class User {
 
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "assistant")//Generate the service
     @JsonIgnore
+    @JsonIdentityInfo(
+            generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
     private List<Facility> facility;
 
     @OneToMany(mappedBy = "client")

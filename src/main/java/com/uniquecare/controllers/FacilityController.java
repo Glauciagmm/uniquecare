@@ -1,5 +1,6 @@
 package com.uniquecare.controllers;
 
+import com.uniquecare.models.Categories;
 import com.uniquecare.models.Facility;
 import com.uniquecare.models.User;
 import com.uniquecare.repositories.CategoriesRepository;
@@ -35,7 +36,7 @@ public class FacilityController {
         this.roleRepository = roleRepository;
     }
 
-    /**Encuentra un servicio cuando le pasas su ID -  works! */
+    /**Encuentra un servicio cuando le pasas su ID - Todos los roles tienen permiso para hacerlo*/
     @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
     @GetMapping("/{id}")
     public Facility findFacilityById(@PathVariable("id") Long id){
@@ -58,7 +59,7 @@ public class FacilityController {
     /**Crea un nuevo servicio y le pasa el user que lo ha creado (user logueado)- works! */
     @PreAuthorize("hasRole('FACILITY')")
     @PostMapping("/create")
-    public ResponseEntity<Facility> addFacility(Authentication authentication, @RequestBody Facility facility) {
+    public ResponseEntity<Facility> addFacility(Authentication authentication, @RequestBody Facility facility, Categories category) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/facility/create").toUriString());
         if (authentication == null) {
             System.out.println("Es necesario que hagas el login");
@@ -67,6 +68,7 @@ public class FacilityController {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             System.out.println(userDetails.getUsername());
             User user = userRepository.getByUsername(userDetails.getUsername());
+            Categories categories = categoryRepository.getCategoryByName(category.getName());
             facility.setAssistant(user);
             //System.out.println(username);
         }

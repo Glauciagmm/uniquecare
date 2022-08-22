@@ -1,27 +1,44 @@
 package com.uniquecare.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 public class Contract {
+
+    public enum State {
+        OPEN,
+        ACCEPTED,
+        DECLINED
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Date start;
     private Date finish;
     private double totalPrice;
+    private State state;
 
 
     @ManyToOne
     @JoinColumn(name = "facility_id", referencedColumnName = "id", nullable = false)
     @JsonIgnoreProperties({"contract"})
+    @JsonIdentityInfo(
+            generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
     private Facility facility;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "client_id", referencedColumnName = "id", nullable = false)
     @JsonIgnoreProperties({"contract", "facility", "roles"})
+    @JsonIdentityInfo(
+            generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
     private User client;
 
     public Contract() {
@@ -100,6 +117,14 @@ public class Contract {
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 
     @Override
