@@ -2,14 +2,12 @@ package com.uniquecare.models;
 
 
 import com.fasterxml.jackson.annotation.*;
-import lombok.Data;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
-@Table(name = "facility",uniqueConstraints = {@UniqueConstraint(columnNames = {"title"})})
+@Table(name = "facility")
 
 public class Facility {
     @Id
@@ -28,7 +26,8 @@ public class Facility {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "assistant_id", referencedColumnName = "id")
-    @JsonIgnoreProperties({"facility", "roles"})
+    //@JsonIgnoreProperties({"facility", "roles"})
+    @JsonIgnore
     private User assistant;
 
     @OneToMany(mappedBy = "facility")
@@ -36,6 +35,7 @@ public class Facility {
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
+    //@JsonIgnore
     private Set<Contract> contract = new HashSet<>();
 
 

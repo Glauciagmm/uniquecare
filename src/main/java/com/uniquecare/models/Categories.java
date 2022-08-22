@@ -1,7 +1,9 @@
 package com.uniquecare.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,7 +11,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
 @Table(name = "category")
 
 public class Categories {
@@ -26,6 +27,9 @@ public class Categories {
             },
             mappedBy = "categories")
     @JsonIgnore
+    @JsonIdentityInfo(
+            generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
     private Set<Facility> facilities = new HashSet<>();
     public Categories() {}
 
