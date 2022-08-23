@@ -1,12 +1,11 @@
 package com.uniquecare.controllers;
 
-
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
-
 import com.uniquecare.models.Categories;
 import com.uniquecare.models.Facility;
+import com.uniquecare.models.ResourceNotFoundException;
 import com.uniquecare.repositories.CategoriesRepository;
 import com.uniquecare.repositories.FacilityRepository;
 import com.uniquecare.services.CategoriesServiceImpl;
@@ -55,14 +54,14 @@ public class CategoryController {
         return categoryService.getById(id);
     }
 
-    /*@GetMapping("/{categoryId}/facilities")
+    @GetMapping("/{categoryId}/facilities")
     public ResponseEntity<List<Facility>> getAllFacilitiesByCategoryId(@PathVariable(value = "categoryId") Long categoryId) {
         if (!categoryRepository.existsById(categoryId)) {
             throw new ResourceNotFoundException("Not found Tag  with id = " + categoryId);
         }
         List<Facility> facilities = facilityRepository.findFacilitiesByCategoriesId(categoryId);
         return new ResponseEntity<>(facilities, HttpStatus.OK);
-    }*/
+    }
 
 }
 

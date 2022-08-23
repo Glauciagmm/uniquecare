@@ -1,6 +1,7 @@
 package com.uniquecare.services;
 
 import com.uniquecare.models.Facility;
+import com.uniquecare.payload.request.FacilityRequest;
 
 import java.util.List;
 

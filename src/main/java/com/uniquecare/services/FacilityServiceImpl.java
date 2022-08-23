@@ -1,12 +1,10 @@
 package com.uniquecare.services;
 
-
 import com.uniquecare.models.Facility;
 import com.uniquecare.repositories.FacilityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.List;
 
