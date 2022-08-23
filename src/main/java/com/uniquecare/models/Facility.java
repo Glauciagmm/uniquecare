@@ -52,6 +52,13 @@ public class Facility {
         this.contract = contract;
     }
 
+    public Facility(Long id, String title, String description, double pricePerHour) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.pricePerHour = pricePerHour;
+    }
+
     public Facility(Long id) {
         this.id = id;
     }
