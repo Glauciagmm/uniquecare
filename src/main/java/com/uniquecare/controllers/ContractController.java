@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpSession;
 import java.net.URI;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -101,4 +102,19 @@ public class ContractController {
         contractService.deleteContractById(id);
         return ResponseEntity.noContent().build();
     }
+
+   /* @PostMapping(path = "/requestContract")
+    public String requestFriendship(@RequestParam Long userId, Principal principal) {
+        List<Contract> requests = contractRepository.findBySenderAndReceiverAndState(sessionUser, user, FriendshipRequest.State.OPEN);
+        if (!requests.isEmpty()) {
+            model.addAttribute("request", requests.get(0));
+        } else {
+            requests = friendshipRequestRepository.findBySenderAndReceiverAndState(user, sessionUser, FriendshipRequest.State.OPEN);
+            if (!requests.isEmpty()) {
+                model.addAttribute("request", requests.get(0));
+            } else {
+                model.addAttribute("request", null);
+            }
+    }*/
+
 }

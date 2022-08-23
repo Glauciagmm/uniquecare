@@ -1,6 +1,7 @@
 package com.uniquecare.services;
 
 import com.uniquecare.models.Contract;
+import com.uniquecare.models.Facility;
 import com.uniquecare.models.User;
 
 import java.util.List;
@@ -14,12 +15,12 @@ public interface IContractService {
     Contract updateContract (Contract contract);
     List<Contract> getContractByUser(Long userId);
     List<Contract> getContractByAssistant(Long assistantId);
-    Contract createContract(User client, User assistant)
+    Contract createContract(User client, Facility facility)
             throws ContractException;
 
-    void acceptFriendshipRequest(Contract request, User assistant)
+    void acceptContractRequest(Contract request, Facility facility)
             throws ContractException;
 
-    void declineFriendshipRequest(Contract request, User assistant)
+    void declineContractRequest(Contract request, Facility facility)
             throws ContractException;
 }

@@ -1,6 +1,7 @@
 package com.uniquecare.services;
 
 import com.uniquecare.models.Contract;
+import com.uniquecare.models.Facility;
 import com.uniquecare.models.User;
 import com.uniquecare.repositories.ContractRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -66,37 +68,34 @@ public class ContractServiceImpl implements IContractService {
     }
 
     @Override
-    public Contract createContract(User client, User assistant) throws ContractException {
-        return null;
-    }
-
-    @Override
-    public Contract createContract(User client, User assistant) throws ContractException {
-        if (client.getFriends().contains(assistant)) {
+    public Contract createContract(User client, Facility facility) throws ContractException {
+        if (client.getContract().contains(facility)) {
             throw new ContractException("Request are already accepted");
         } else if (!contractRepository
-                .findByClientAssistantAndState(client, assistant, Contract.State.OPEN).isEmpty()) {
+                .findByClientFacilityAndState(client, facility, Contract.State.OPEN).isEmpty()) {
             throw new ContractException("A pending request exists");
         } else if (!contractRepository
-                .findByClientAssistantAndState(client, assistant, Contract.State.OPEN).isEmpty()) {
+                .findByClientFacilityAndState(client, facility, Contract.State.OPEN).isEmpty()) {
             throw new ContractException("A pending request exists");
         }
         Contract request = new Contract();
         request.setClient(client);
-        request.setAssistant(assistant);
-        request.setStrat(new Date());
-        request.setState(FriendshipRequest.State.OPEN);
-        friendshipRequestRepository.save(request);
+        request.setFacility(facility);
+        request.setStart(new Date());
+        request.setState(Contract.State.OPEN);
+        contractRepository.save(request);
         return request;
-    }*/
+    }
 
     @Override
-    public void acceptFriendshipRequest(Contract request, User assistant) throws ContractException {
+    public void acceptContractRequest(Contract request, Facility facility) throws ContractException {
 
     }
 
     @Override
-    public void declineFriendshipRequest(Contract request, User assistant) throws ContractException {
+    public void declineContractRequest(Contract request, Facility facility) throws ContractException {
 
     }
+
+
 }
