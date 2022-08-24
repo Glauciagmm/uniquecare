@@ -30,8 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uniquecare.models.ERole;
 import com.uniquecare.models.Role;
-import com.uniquecare.repositories.RoleRepository;
-import com.uniquecare.repositories.UserRepository;
+
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -125,8 +124,6 @@ public class AuthController {
         }
 
         user.setRoles(roles);
-        //userRepository.save(user);
-
         return ResponseEntity.ok(userService.saveUser(user));
     }
 }

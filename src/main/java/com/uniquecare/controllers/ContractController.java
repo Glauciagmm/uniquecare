@@ -1,15 +1,14 @@
 package com.uniquecare.controllers;
 
+import com.uniquecare.Exceptions.ContractException;
 import com.uniquecare.models.Contract;
 import com.uniquecare.models.Facility;
 import com.uniquecare.models.User;
 import com.uniquecare.payload.request.ContractRequest;
+import com.uniquecare.repositories.ContractRepository;
 import com.uniquecare.repositories.FacilityRepository;
 import com.uniquecare.repositories.UserRepository;
-import com.uniquecare.services.IContractService;
-import com.uniquecare.services.IFacilityService;
-import com.uniquecare.services.IUserService;
-import com.uniquecare.services.UserDetailsImpl;
+import com.uniquecare.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpSession;
 import java.net.URI;
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -32,6 +30,9 @@ public class ContractController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    ContractRepository contractRepository;
 
     @Autowired
     FacilityRepository facilityRepository;
@@ -51,6 +52,16 @@ public class ContractController {
         return ResponseEntity.ok().body(contractService.findAllContracts());
     }
 
+    @GetMapping("/contract/receivedrequest")
+    public List<Contract> getContractRequests (Authentication authentication, HttpSession session, Facility facility) throws ContractException {
+
+        if (authentication == null) {
+            System.out.println("Es necesario que hagas el login");
+        } else {
+            return contractService.findByFacilityAndState(facility, Contract.State.OPEN);
+        }
+        return null;
+    }
 
     /**Encuentra un contracto cuando le pasas su ID -  works! */
     @GetMapping("/contract/{id}")
@@ -91,9 +102,9 @@ public class ContractController {
     }
 
     @PutMapping("/contract/edit")
-    public ResponseEntity<Contract> editContract(@RequestBody Contract contract){
+    public ResponseEntity<Contract> editContract(@RequestBody ContractRequest contractRequest) throws ContractException {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/contract/add").toUriString());
-        return ResponseEntity.created(uri).body(contractService.updateContract(contract));
+        return ResponseEntity.created(uri).body(contractService.updateContract(contractRequest));
     }
 
     /**Borra un servicio de la base de datos - works! */
@@ -103,18 +114,46 @@ public class ContractController {
         return ResponseEntity.noContent().build();
     }
 
-   /* @PostMapping(path = "/requestContract")
-    public String requestFriendship(@RequestParam Long userId, Principal principal) {
-        List<Contract> requests = contractRepository.findBySenderAndReceiverAndState(sessionUser, user, FriendshipRequest.State.OPEN);
-        if (!requests.isEmpty()) {
-            model.addAttribute("request", requests.get(0));
-        } else {
-            requests = friendshipRequestRepository.findBySenderAndReceiverAndState(user, sessionUser, FriendshipRequest.State.OPEN);
-            if (!requests.isEmpty()) {
-                model.addAttribute("request", requests.get(0));
-            } else {
-                model.addAttribute("request", null);
-            }
-    }*/
+   @PostMapping( "/requestcontract")
+    public ResponseEntity<?> requestContract(Authentication authentication, @RequestBody ContractRequest contractRequest) throws ContractException {
+       URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/requestcontract").toUriString());
+       if (authentication == null) {
+           System.out.println("Es necesario que hagas el login");
+           return ResponseEntity.badRequest().body("Es necesario que hagas el login");
+       } else {
+           UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+           System.out.println(userDetails.getUsername());
+           User client = userRepository.getByUsername(userDetails.getUsername());
+           Facility facility = facilityService.findFacilityById(contractRequest.getFacility_id());
+          return ResponseEntity.created(uri).body(contractService.createContractRequest(contractRequest));
+       }
+   }
 
+   @PutMapping("/acceptcontract/{id}")
+   public ResponseEntity<?> acceptContract (Authentication authentication,@PathVariable Long id) throws ContractException {
+       URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/acceptedcontract").toUriString());
+       if (authentication == null) {
+           System.out.println("Es necesario que hagas el login");
+           return ResponseEntity.badRequest().body("Es necesario que hagas el login");
+       }
+        Contract contract = contractService.findContractById(id);
+       contract.setState(Contract.State.ACCEPTED);
+              return ResponseEntity.created(uri).body(contractService.addContract(contract));
+   }
+
+    @PutMapping("/declinecontract")
+    public ResponseEntity<?> declineContract(Authentication authentication,@PathVariable Long id) throws ContractException {
+       URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/acceptedcontract").toUriString());
+       if (authentication == null) {
+           System.out.println("Es necesario que hagas el login");
+           return ResponseEntity.badRequest().body("Es necesario que hagas el login");
+       }
+        Contract contract = contractService.findContractById(id);
+       contract.setState(Contract.State.DECLINED);
+              return ResponseEntity.created(uri).body(contractService.addContract(contract));
+   }
 }
+
+
+
+

@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
 @Table(name = "facility",uniqueConstraints = {@UniqueConstraint(columnNames = {"title"})})
 
 public class Facility {

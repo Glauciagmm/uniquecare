@@ -1,4 +1,4 @@
-package com.uniquecare.controllers;
+package com.uniquecare.Exceptions;
 
 import com.uniquecare.models.ErrorDetails;
 import org.springframework.http.HttpStatus;

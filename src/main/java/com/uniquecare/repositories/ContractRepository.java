@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface ContractRepository extends JpaRepository<Contract, Long> {
-    List<Contract> findByClientFacilityAndState(User client, Facility facility, Contract.State state);
     List<Contract> findByFacilityAndState(Facility facility, Contract.State state);
+    List<Contract> findByClientAndFacilityAndState(User client, Facility facility, Contract.State state);
+    Boolean existsByClientAndFacility(User client, Facility facility);
 }

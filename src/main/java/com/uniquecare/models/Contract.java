@@ -21,9 +21,8 @@ public class Contract {
     private Long id;
     private Date start;
     private Date finish;
-    private double totalPrice;
+    private int totalPrice;
     private State state;
-
 
     @ManyToOne
     @JoinColumn(name = "facility_id", referencedColumnName = "id", nullable = false)
@@ -42,49 +41,6 @@ public class Contract {
     private User client;
 
     public Contract() {
-    }
-
-    public Contract(Long id, Date start, Date finish, double totalPrice, Facility facility, User client) {
-        this.id = id;
-        this.start = start;
-        this.finish = finish;
-        this.totalPrice = totalPrice;
-        this.facility = facility;
-        this.client = client;
-    }
-
-    public Contract(Date start, Date finish, double totalPrice, Facility facility, User client) {
-        this.start = start;
-        this.finish = finish;
-        this.totalPrice = totalPrice;
-        this.facility = facility;
-        this.client = client;
-    }
-
-    public Contract(Long id) {
-        this.id = id;
-    }
-
-    public Contract(Date start, Date finish) {
-        this.start = start;
-        this.finish = finish;
-    }
-
-    public User getClient() {
-        return client;
-    }
-
-    public void setClient(User client) {
-        this.client = client;
-    }
-
-    public Facility getFacility() {
-        return facility;
-    }
-
-    public void setFacility(Facility facility) {
-
-        this.facility = facility;
     }
 
     public Long getId() {
@@ -111,11 +67,11 @@ public class Contract {
         this.finish = finish;
     }
 
-    public double getTotalPrice() {
+    public int getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(double totalPrice) {
+    public void setTotalPrice(int totalPrice) {
         this.totalPrice = totalPrice;
     }
 
@@ -123,20 +79,28 @@ public class Contract {
         return state;
     }
 
+    public State getState(State declined) {
+        return declined;
+    }
+
     public void setState(State state) {
         this.state = state;
     }
 
-    @Override
-    public String toString() {
-        return "Contract{" +
-                "id=" + id +
-                ", start=" + start +
-                ", finish=" + finish +
-                ", totalPrice=" + totalPrice +
-                ", state=" + state +
-                ", facility=" + facility +
-                ", client=" + client +
-                '}';
+    public Facility getFacility() {
+        return facility;
     }
+
+    public void setFacility(Facility facility) {
+        this.facility = facility;
+    }
+
+    public User getClient() {
+        return client;
+    }
+
+    public void setClient(User client) {
+        this.client = client;
+    }
+
 }

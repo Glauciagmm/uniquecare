@@ -1,21 +1,21 @@
 package com.uniquecare.services;
 
+import com.uniquecare.Exceptions.ContractException;
 import com.uniquecare.models.Contract;
 import com.uniquecare.models.Facility;
 import com.uniquecare.models.User;
+import com.uniquecare.payload.request.ContractRequest;
 import com.uniquecare.repositories.ContractRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 @Slf4j
 public class ContractServiceImpl implements IContractService {
@@ -51,9 +51,43 @@ public class ContractServiceImpl implements IContractService {
         contractRepository.deleteById(id);
     }
 
+
     @Override
-    public Contract updateContract(Contract contract) {
-        return contractRepository.save(contract);
+    public Contract createContractRequest (ContractRequest contractRequest) throws ContractException {
+        User client = userService.getUserById(contractRequest.getClient_id());
+        Facility facility = facilityService.findFacilityById(contractRequest.getFacility_id());
+        if (client.getContract().contains(facility)) {
+            throw new ContractException("Request are already accepted");
+        } else if (!contractRepository
+                .findByClientAndFacilityAndState(client, facility, Contract.State.OPEN).isEmpty()) {
+            throw new ContractException("A pending request exists");
+        } else if (!contractRepository
+                .findByClientAndFacilityAndState(client, facility, Contract.State.OPEN).isEmpty()) {
+            throw new ContractException("A pending request exists");
+        }
+        Contract request = new Contract();
+        request.setClient(client);
+        request.setFacility(facility);
+        request.setStart(contractRequest.getStart());
+        request.setFinish(contractRequest.getFinish());
+        request.setTotalPrice(contractRequest.getTotalPrice());
+        request.setState(contractRequest.getState(Contract.State.OPEN));
+        contractRepository.save(request);
+        return request;
+    }
+
+    @Override
+    public Contract updateContract(ContractRequest contractRequest) throws ContractException{
+        User client = userService.getUserById(contractRequest.getClient_id());
+        Facility facility = facilityService.findFacilityById(contractRequest.getFacility_id());
+        if (client.getContract().contains(facility)) {
+            throw new ContractException("Request are already accepted");
+        } else if (!contractRepository
+                .findByClientAndFacilityAndState(client, facility, Contract.State.DECLINED).isEmpty()) {
+            throw new ContractException("This request was already refused");
+        }
+        return null;
+                //contractRepository.save(contractRequest);
     }
 
     @Override
@@ -67,35 +101,38 @@ public class ContractServiceImpl implements IContractService {
         return userService.getContractByAssistantId(assistantId);
     }
 
+   /* @Override
+    public Contract acceptContractRequest(ContractRequest contractRequest) throws ContractException {
+        Optional<Contract> contract = contractRepository.findById(41L);
+        contract.get().setState(Contract.State.ACCEPTED);
+        return contractRepository.save(contract.get());
+    }
+
     @Override
-    public Contract createContract(User client, Facility facility) throws ContractException {
-        if (client.getContract().contains(facility)) {
-            throw new ContractException("Request are already accepted");
-        } else if (!contractRepository
-                .findByClientFacilityAndState(client, facility, Contract.State.OPEN).isEmpty()) {
-            throw new ContractException("A pending request exists");
-        } else if (!contractRepository
-                .findByClientFacilityAndState(client, facility, Contract.State.OPEN).isEmpty()) {
-            throw new ContractException("A pending request exists");
+    public Contract declineContractRequest(ContractRequest contractRequest) throws ContractException {
+        Optional<Contract> contract = contractRepository.findById(contractRequest.getId());
+
+        contract.get().setState(Contract.State.DECLINED);
+        return contractRepository.save(contract.get());
+    }*/
+
+    @Override
+    public List<Contract> getAllRequest(User client, Facility facility, Contract.State state) throws ContractException {
+        List<Contract> request = contractRepository.findByClientAndFacilityAndState(client, facility,state);
+        if (!request.isEmpty()){
+            throw new ContractException("No contracts to show");
+        } else {
+            return contractRepository.findAll();
         }
-        Contract request = new Contract();
-        request.setClient(client);
-        request.setFacility(facility);
-        request.setStart(new Date());
-        request.setState(Contract.State.OPEN);
-        contractRepository.save(request);
-        return request;
     }
 
     @Override
-    public void acceptContractRequest(Contract request, Facility facility) throws ContractException {
-
+    public List<Contract> getOpenRequest(Contract.State state) throws ContractException {
+        return null;
     }
 
     @Override
-    public void declineContractRequest(Contract request, Facility facility) throws ContractException {
-
+    public List<Contract> findByFacilityAndState(Facility facility, Contract.State state) {
+        return contractRepository.findByFacilityAndState(facility, state);
     }
-
-
 }
