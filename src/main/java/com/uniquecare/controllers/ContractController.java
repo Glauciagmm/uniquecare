@@ -115,9 +115,9 @@ public class ContractController {
            System.out.println("Es necesario que hagas el login");
            return ResponseEntity.badRequest().body("Es necesario que hagas el login");
        }
-        Contract contract = contractService.findContractById(id);
+       Contract contract = contractService.findContractById(id);
        contract.setState(Contract.State.ACCEPTED);
-              return ResponseEntity.created(uri).body(contractService.addContract(contract));
+       return ResponseEntity.created(uri).body(contractService.addContract(contract));
    }
 
     @PutMapping("/declinecontract")
