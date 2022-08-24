@@ -80,27 +80,6 @@ public class ContractController {
         return ResponseEntity.ok().body(contractService.findAllContracts());
     }
 
-    @PostMapping("/contract/add")
-    public ResponseEntity<Contract> addContract(Authentication authentication, @RequestBody ContractRequest contractRequest) {
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/contract/add").toUriString());
-        if (authentication == null) {
-            System.out.println("Es necesario que hagas el login");
-        } else {
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-            System.out.println(userDetails.getUsername());
-            User user = userRepository.getByUsername(userDetails.getUsername());
-            Facility facility = facilityService.findFacilityById(contractRequest.getFacility_id());
-            Contract contract = new Contract();
-            contract.setStart(contractRequest.getStart());
-            contract.setFinish(contractRequest.getFinish());
-            contract.setTotalPrice(contractRequest.getTotalPrice());
-            contract.setFacility(facility);
-            contract.setClient(user);
-            return ResponseEntity.created(uri).body(contractService.addContract(contract));
-        }
-        return ResponseEntity.internalServerError().build();
-    }
-
     @PutMapping("/contract/edit")
     public ResponseEntity<Contract> editContract(@RequestBody ContractRequest contractRequest) throws ContractException {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/contract/add").toUriString());
@@ -153,6 +132,45 @@ public class ContractController {
               return ResponseEntity.created(uri).body(contractService.addContract(contract));
    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*@PostMapping("/contract/add")
+    public ResponseEntity<Contract> addContract(Authentication authentication, @RequestBody ContractRequest contractRequest) {
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/contract/add").toUriString());
+        if (authentication == null) {
+            System.out.println("Es necesario que hagas el login");
+        } else {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            System.out.println(userDetails.getUsername());
+            User user = userRepository.getByUsername(userDetails.getUsername());
+            Facility facility = facilityService.findFacilityById(contractRequest.getFacility_id());
+            Contract contract = new Contract();
+            contract.setStart(contractRequest.getStart());
+            contract.setFinish(contractRequest.getFinish());
+            contract.setTotalPrice(contractRequest.getTotalPrice());
+            contract.setFacility(facility);
+            contract.setClient(user);
+            return ResponseEntity.created(uri).body(contractService.addContract(contract));
+        }
+        return ResponseEntity.internalServerError().build();
+    }*/
 
 
 

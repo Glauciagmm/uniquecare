@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -101,22 +100,7 @@ public class ContractServiceImpl implements IContractService {
         return userService.getContractByAssistantId(assistantId);
     }
 
-   /* @Override
-    public Contract acceptContractRequest(ContractRequest contractRequest) throws ContractException {
-        Optional<Contract> contract = contractRepository.findById(41L);
-        contract.get().setState(Contract.State.ACCEPTED);
-        return contractRepository.save(contract.get());
-    }
-
-    @Override
-    public Contract declineContractRequest(ContractRequest contractRequest) throws ContractException {
-        Optional<Contract> contract = contractRepository.findById(contractRequest.getId());
-
-        contract.get().setState(Contract.State.DECLINED);
-        return contractRepository.save(contract.get());
-    }*/
-
-    @Override
+     @Override
     public List<Contract> getAllRequest(User client, Facility facility, Contract.State state) throws ContractException {
         List<Contract> request = contractRepository.findByClientAndFacilityAndState(client, facility,state);
         if (!request.isEmpty()){
@@ -136,3 +120,36 @@ public class ContractServiceImpl implements IContractService {
         return contractRepository.findByFacilityAndState(facility, state);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ /* @Override
+    public Contract acceptContractRequest(ContractRequest contractRequest) throws ContractException {
+        Optional<Contract> contract = contractRepository.findById(41L);
+        contract.get().setState(Contract.State.ACCEPTED);
+        return contractRepository.save(contract.get());
+    }
+
+    @Override
+    public Contract declineContractRequest(ContractRequest contractRequest) throws ContractException {
+        Optional<Contract> contract = contractRepository.findById(contractRequest.getId());
+
+        contract.get().setState(Contract.State.DECLINED);
+        return contractRepository.save(contract.get());
+    }*/
