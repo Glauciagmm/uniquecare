@@ -60,9 +60,7 @@ public class CategoryController {
         return categoryService.getById(id);
     }
 
-<<<<<<< HEAD
-    /**falta la funcionalidad de David de filtrar el servicio por categoria */
-=======
+
   @GetMapping("/{categoryId}/facilities")
     public ResponseEntity<List<Facility>> getAllFacilitiesByCategoryId(@PathVariable(value = "categoryId") Long categoryId) {
         if (!categoriesRepository.existsById(categoryId)) {
@@ -71,7 +69,5 @@ public class CategoryController {
         List<Facility> facilities = facilityRepository.findFacilitiesByCategoriesId(categoryId);
         return new ResponseEntity<>(facilities, HttpStatus.OK);
     }
-
->>>>>>> feature/conttract-category
 }
 
