@@ -7,12 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-<<<<<<< HEAD
 @Table(name = "facility")
-=======
-@Table(name = "facility",uniqueConstraints = {@UniqueConstraint(columnNames = {"title"})})
->>>>>>> feature/ContractRequest
-
 public class Facility {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,23 +28,17 @@ public class Facility {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "assistant_id", referencedColumnName = "id")
-<<<<<<< HEAD
-    //@JsonIgnoreProperties({"facility", "roles"})
-    @JsonIgnore
-=======
     @JsonIgnoreProperties({"facility", "roles"})
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
->>>>>>> feature/ContractRequest
     private User assistant;
 
     @OneToMany(mappedBy = "facility")
-    @JsonIgnoreProperties({"facility"})
+    @JsonIgnoreProperties({"facility", "contract"} )
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
-    //@JsonIgnore
     private Set<Contract> contract = new HashSet<>();
 
 
