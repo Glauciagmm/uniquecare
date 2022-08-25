@@ -5,11 +5,14 @@ import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
 
+import com.uniquecare.Exceptions.ResourceNotFoundException;
 import com.uniquecare.models.Categories;
+import com.uniquecare.models.Facility;
 import com.uniquecare.repositories.CategoriesRepository;
 import com.uniquecare.repositories.FacilityRepository;
 import com.uniquecare.services.CategoriesServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -60,14 +63,14 @@ public class CategoryController {
         return categoryService.getById(id);
     }
 
-    /*@GetMapping("/{categoryId}/facilities")
+  @GetMapping("/{categoryId}/facilities")
     public ResponseEntity<List<Facility>> getAllFacilitiesByCategoryId(@PathVariable(value = "categoryId") Long categoryId) {
-        if (!categoryRepository.existsById(categoryId)) {
+        if (!categoriesRepository.existsById(categoryId)) {
             throw new ResourceNotFoundException("Not found Tag  with id = " + categoryId);
         }
         List<Facility> facilities = facilityRepository.findFacilitiesByCategoriesId(categoryId);
         return new ResponseEntity<>(facilities, HttpStatus.OK);
-    }*/
+    }
 
 }
 
