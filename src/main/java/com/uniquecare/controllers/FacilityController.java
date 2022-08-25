@@ -60,34 +60,18 @@ public class FacilityController {
     /**Crea un nuevo servicio y le pasa el user que lo ha creado (user logueado)- works! */
     @PreAuthorize("hasRole('FACILITY')")
     @PostMapping("/create")
-<<<<<<< HEAD
-    public ResponseEntity<?> addFacility(Authentication authentication, @RequestBody FacilityRequest facilityRequest) {
-=======
     public ResponseEntity<Facility> addFacility(Authentication authentication, @RequestBody Facility facility, Categories category) {
->>>>>>> feature/ContractRequest
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/facility/create").toUriString());
-        Facility facility;
-
         if (authentication == null) {
             System.out.println("Es necesario que hagas el login");
-            return ResponseEntity.badRequest().body("Es necesario que hagas el login");
+            return ResponseEntity.badRequest().body(facility);
         } else {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             System.out.println(userDetails.getUsername());
             User user = userRepository.getByUsername(userDetails.getUsername());
-<<<<<<< HEAD
-
-            Categories category = categoryRepository.findById(facilityRequest.getCategoryId()).orElseThrow(RuntimeException::new);
-
-            facility = new Facility();
-            facility.setTitle(facilityRequest.getTitle());
-            facility.setDescription(facilityRequest.getDescription());
-            facility.setPricePerHour(facilityRequest.getPricePerHour());
-=======
             Categories categories = categoryRepository.getCategoryByName(category.getName());
->>>>>>> feature/ContractRequest
             facility.setAssistant(user);
-            facility.getCategories().add(category);
+            //System.out.println(username);
         }
         return ResponseEntity.created(uri).body(facilityService.addNewFacility(facility));
     }
