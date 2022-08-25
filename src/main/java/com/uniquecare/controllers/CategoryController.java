@@ -60,14 +60,6 @@ public class CategoryController {
         return categoryService.getById(id);
     }
 
-    /*@GetMapping("/{categoryId}/facilities")
-    public ResponseEntity<List<Facility>> getAllFacilitiesByCategoryId(@PathVariable(value = "categoryId") Long categoryId) {
-        if (!categoryRepository.existsById(categoryId)) {
-            throw new ResourceNotFoundException("Not found Tag  with id = " + categoryId);
-        }
-        List<Facility> facilities = facilityRepository.findFacilitiesByCategoriesId(categoryId);
-        return new ResponseEntity<>(facilities, HttpStatus.OK);
-    }*/
-
+    /**falta la funcionalidad de David de filtrar el servicio por categoria */
 }
 
