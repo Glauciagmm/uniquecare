@@ -39,7 +39,7 @@ public class FacilityController {
 
     /**Encuentra un servicio cuando le pasas su ID - Todos los roles tienen permiso para hacerlo*/
     @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
-    @GetMapping("/{id}")
+    @GetMapping("/single/{id}")
     public Facility findFacilityById(@PathVariable("id") Long id){
         return facilityService.findFacilityById(id);
     }

@@ -44,7 +44,8 @@ public class FacilityServiceImpl implements IFacilityService {
 
     @Override
     public List<Facility> getAllFacilitiesByAssistantId(Long assistantId) {
-        return null;
+        return facilityRepository.findFacilitiesByAssistant(assistantId);
+
     }
 
     @Override
