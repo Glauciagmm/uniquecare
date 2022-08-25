@@ -37,7 +37,7 @@ public class FacilityController {
         this.roleRepository = roleRepository;
     }
 
-    /**Encuentra un servicio cuando le pasas su ID -  works! */
+    /**Encuentra un servicio cuando le pasas su ID - Todos los roles tienen permiso para hacerlo*/
     @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
     @GetMapping("/{id}")
     public Facility findFacilityById(@PathVariable("id") Long id){
@@ -60,7 +60,11 @@ public class FacilityController {
     /**Crea un nuevo servicio y le pasa el user que lo ha creado (user logueado)- works! */
     @PreAuthorize("hasRole('FACILITY')")
     @PostMapping("/create")
+<<<<<<< HEAD
     public ResponseEntity<?> addFacility(Authentication authentication, @RequestBody FacilityRequest facilityRequest) {
+=======
+    public ResponseEntity<Facility> addFacility(Authentication authentication, @RequestBody Facility facility, Categories category) {
+>>>>>>> feature/ContractRequest
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/facility/create").toUriString());
         Facility facility;
 
@@ -71,6 +75,7 @@ public class FacilityController {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             System.out.println(userDetails.getUsername());
             User user = userRepository.getByUsername(userDetails.getUsername());
+<<<<<<< HEAD
 
             Categories category = categoryRepository.findById(facilityRequest.getCategoryId()).orElseThrow(RuntimeException::new);
 
@@ -78,6 +83,9 @@ public class FacilityController {
             facility.setTitle(facilityRequest.getTitle());
             facility.setDescription(facilityRequest.getDescription());
             facility.setPricePerHour(facilityRequest.getPricePerHour());
+=======
+            Categories categories = categoryRepository.getCategoryByName(category.getName());
+>>>>>>> feature/ContractRequest
             facility.setAssistant(user);
             facility.getCategories().add(category);
         }

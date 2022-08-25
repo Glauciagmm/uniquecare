@@ -31,6 +31,7 @@ public class Categories {
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
     private Set<Facility> facilities = new HashSet<>();
+
     public Categories() {}
 
     public Categories(Long id, String name, Set<Facility> facilities) {

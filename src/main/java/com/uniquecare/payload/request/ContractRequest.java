@@ -1,6 +1,8 @@
 package com.uniquecare.payload.request;
 
 
+import com.uniquecare.models.Contract;
+
 import java.util.Date;
 
 public class ContractRequest {
@@ -10,6 +12,7 @@ public class ContractRequest {
     private double totalPrice;
     private Long facility_id;
     private Long client_id;
+    private Contract.State state;
 
     public Long getId() {
         return id;
@@ -59,12 +62,17 @@ public class ContractRequest {
         this.client_id = client_id;
     }
 
-    public ContractRequest(Long id, Date start, Date finish, double totalPrice, Long facility_id, Long client_id) {
-        this.id = id;
-        this.start = start;
-        this.finish = finish;
-        this.totalPrice = totalPrice;
-        this.facility_id = facility_id;
-        this.client_id = client_id;
+    public Contract.State getState() {
+        return state;
     }
+
+    public void setState(Contract.State state) {
+        this.state = state;
+    }
+
+    public Contract.State getState(Contract.State open) {
+        return open;
+    }
+
+
 }

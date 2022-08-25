@@ -1,6 +1,10 @@
 package com.uniquecare.models;
 
 import javax.persistence.*;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.HashSet;
+
 @Entity
 @Table(name = "roles")
 public class Role {
@@ -27,4 +31,6 @@ public class Role {
     public void setName(ERole name) {
         this.name = name;
     }
+
+
 }

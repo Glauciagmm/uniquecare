@@ -34,6 +34,11 @@ public class CategoriesServiceImpl implements ICategoriesService {
     }
 
     @Override
+    public Categories getCategoryByName(String name) {
+        return categoryRepository.getCategoryByName(name);
+    }
+
+    @Override
     public Categories addNewCategory(Categories category) {
         return categoryRepository.save(category);
     }

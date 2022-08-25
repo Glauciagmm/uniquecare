@@ -7,7 +7,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+<<<<<<< HEAD
 @Table(name = "facility")
+=======
+@Table(name = "facility",uniqueConstraints = {@UniqueConstraint(columnNames = {"title"})})
+>>>>>>> feature/ContractRequest
 
 public class Facility {
     @Id
@@ -22,12 +26,22 @@ public class Facility {
             joinColumns = {@JoinColumn(name = "facility_id")},
             inverseJoinColumns = {@JoinColumn(name = "category_id")})
     @JsonIgnore
+    @JsonIdentityInfo(
+            generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
     private Set<Categories> categories = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "assistant_id", referencedColumnName = "id")
+<<<<<<< HEAD
     //@JsonIgnoreProperties({"facility", "roles"})
     @JsonIgnore
+=======
+    @JsonIgnoreProperties({"facility", "roles"})
+    @JsonIdentityInfo(
+            generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
+>>>>>>> feature/ContractRequest
     private User assistant;
 
     @OneToMany(mappedBy = "facility")
