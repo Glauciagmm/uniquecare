@@ -36,10 +36,7 @@ public class CategoryController {
         this.facilityRepository = facilityRepository;
     }
 
-    @GetMapping("/all")
-    public String allAccess() {
-        return "Public Content.";
-    }
+
 
     @GetMapping("/list")
     public ResponseEntity<List<Categories>> Category(Authentication authentication) {
