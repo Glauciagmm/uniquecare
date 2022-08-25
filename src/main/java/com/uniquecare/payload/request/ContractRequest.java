@@ -9,7 +9,7 @@ public class ContractRequest {
     private Long id;
     private Date start;
     private Date finish;
-    private int totalPrice;
+    private double totalPrice;
     private Long facility_id;
     private Long client_id;
     private Contract.State state;
@@ -38,11 +38,11 @@ public class ContractRequest {
         this.finish = finish;
     }
 
-    public int getTotalPrice() {
+    public double getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(int totalPrice) {
+    public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
 

@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -55,15 +56,6 @@ public class ContractServiceImpl implements IContractService {
     public Contract createContractRequest (ContractRequest contractRequest) throws ContractException {
         User client = userService.getUserById(contractRequest.getClient_id());
         Facility facility = facilityService.findFacilityById(contractRequest.getFacility_id());
-        if (client.getContract().contains(facility)) {
-            throw new ContractException("Request are already accepted");
-        } else if (!contractRepository
-                .findByClientAndFacilityAndState(client, facility, Contract.State.OPEN).isEmpty()) {
-            throw new ContractException("A pending request exists");
-        } else if (!contractRepository
-                .findByClientAndFacilityAndState(client, facility, Contract.State.OPEN).isEmpty()) {
-            throw new ContractException("A pending request exists");
-        }
         Contract request = new Contract();
         request.setClient(client);
         request.setFacility(facility);
@@ -73,6 +65,14 @@ public class ContractServiceImpl implements IContractService {
         request.setState(contractRequest.getState(Contract.State.OPEN));
         contractRepository.save(request);
         return request;
+    }
+
+    @Override
+    public Boolean existsByClientAndFacilityAndStartAndFinish(ContractRequest contractRequest) {
+        User client = userService.getUserById(contractRequest.getClient_id());
+        Facility facility = facilityService.findFacilityById(contractRequest.getFacility_id());
+        return contractRepository.existsByClientAndFacilityAndStartAndFinish(client, facility, contractRequest.getStart(), contractRequest.getFinish());
+
     }
 
     @Override
@@ -152,4 +152,38 @@ public class ContractServiceImpl implements IContractService {
 
         contract.get().setState(Contract.State.DECLINED);
         return contractRepository.save(contract.get());
+    }*/
+
+    /*@Override
+    public Contract createContractRequest (ContractRequest contractRequest) throws ContractException {
+        User client = userService.getUserById(contractRequest.getClient_id());
+        Facility facility = facilityService.findFacilityById(contractRequest.getFacility_id());
+        *//*client.getContract().stream().forEach(contract -> {
+            if(contract.getStart().compareTo(contractRequest.getStart()) == 0) {
+                try {
+                    throw new ContractException("A pending request exists");
+                } catch (ContractException e) {
+                    e.printStackTrace();
+                }
+            };
+        });*//*
+        *//*if (client.getContract().contains(facility)) {
+            throw new ContractException("Request are already accepted");
+        } else if (!contractRepository
+                .findByClientAndFacilityAndState(client, facility, Contract.State.OPEN).isEmpty()) {
+            throw new ContractException("A pending request exists");
+        } else if (!contractRepository
+                .findByClientAndFacilityAndState(client, facility, Contract.State.OPEN).isEmpty()) {
+            throw new ContractException("A pending request exists");
+        }*//*
+
+        Contract request = new Contract();
+        request.setClient(client);
+        request.setFacility(facility);
+        request.setStart(contractRequest.getStart());
+        request.setFinish(contractRequest.getFinish());
+        request.setTotalPrice(contractRequest.getTotalPrice());
+        request.setState(contractRequest.getState(Contract.State.OPEN));
+        contractRepository.save(request);
+        return request;
     }*/

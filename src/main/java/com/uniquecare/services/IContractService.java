@@ -6,6 +6,7 @@ import com.uniquecare.models.Facility;
 import com.uniquecare.models.User;
 import com.uniquecare.payload.request.ContractRequest;
 
+import java.util.Date;
 import java.util.List;
 
 public interface IContractService {
@@ -21,4 +22,5 @@ public interface IContractService {
     List<Contract> getAllRequest (User client, Facility facility, Contract.State state) throws ContractException;
     List<Contract> getOpenRequest (Contract.State state) throws ContractException;
     List<Contract> findByFacilityAndState(Facility facility, Contract.State state);
+    Boolean existsByClientAndFacilityAndStartAndFinish(ContractRequest contractRequest);
 }

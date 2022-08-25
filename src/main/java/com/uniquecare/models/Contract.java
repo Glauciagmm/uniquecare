@@ -21,7 +21,7 @@ public class Contract {
     private Long id;
     private Date start;
     private Date finish;
-    private int totalPrice;
+    private double totalPrice;
     private State state;
 
     @ManyToOne
@@ -67,11 +67,11 @@ public class Contract {
         this.finish = finish;
     }
 
-    public int getTotalPrice() {
+    public double getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(int totalPrice) {
+    public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
 

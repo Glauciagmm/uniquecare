@@ -99,13 +99,17 @@ public class ContractController {
        if (authentication == null) {
            System.out.println("Es necesario que hagas el login");
            return ResponseEntity.badRequest().body("Es necesario que hagas el login");
-       } else {
-           UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-           System.out.println(userDetails.getUsername());
-           User client = userRepository.getByUsername(userDetails.getUsername());
-           Facility facility = facilityService.findFacilityById(contractRequest.getFacility_id());
-          return ResponseEntity.created(uri).body(contractService.createContractRequest(contractRequest));
        }
+
+       if(contractService.existsByClientAndFacilityAndStartAndFinish(contractRequest)) {
+           return ResponseEntity.badRequest().body("The request already exists");
+       }
+
+       UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+       System.out.println(userDetails.getUsername());
+       /*User client = userRepository.getByUsername(userDetails.getUsername());
+       Facility facility = facilityService.findFacilityById(contractRequest.getFacility_id());*/
+       return ResponseEntity.created(uri).body(contractService.createContractRequest(contractRequest));
    }
 
    @PutMapping("/acceptcontract/{id}")
@@ -120,7 +124,7 @@ public class ContractController {
        return ResponseEntity.created(uri).body(contractService.addContract(contract));
    }
 
-    @PutMapping("/declinecontract")
+    @PutMapping("/declinecontract/{id}")
     public ResponseEntity<?> declineContract(Authentication authentication,@PathVariable Long id) throws ContractException {
        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/acceptedcontract").toUriString());
        if (authentication == null) {
