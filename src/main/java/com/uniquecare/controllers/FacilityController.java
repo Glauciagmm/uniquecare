@@ -58,7 +58,7 @@ public class FacilityController {
 
 
     /**Crea un nuevo servicio y le pasa el user que lo ha creado (user logueado)- works! */
-    @PreAuthorize("hasRole('FACILITY')")
+    /*@PreAuthorize("hasRole('FACILITY')")
     @PostMapping("/create")
     public ResponseEntity<Facility> addFacility(Authentication authentication, @RequestBody Facility facility, Categories category) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/facility/create").toUriString());
@@ -74,13 +74,36 @@ public class FacilityController {
             //System.out.println(username);
         }
         return ResponseEntity.created(uri).body(facilityService.addNewFacility(facility));
+    }*/
+    @PreAuthorize("hasRole('FACILITY')")
+    @PostMapping("/create")
+    public ResponseEntity<Facility> addFacility(Authentication authentication, @RequestBody FacilityRequest facilityRequest,
+                                                Categories category,Facility facility) {
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/facility/create").toUriString());
+        if (authentication == null) {
+            System.out.println("Es necesario que hagas el login");
+            return ResponseEntity.badRequest().body(facility);
+        } else {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            User user = userRepository.getByUsername(userDetails.getUsername());
+            category = categoryRepository.findById(facilityRequest.getCategoryId()).orElseThrow(RuntimeException::new);
+            facility = new Facility();
+            facility.setTitle(facilityRequest.getTitle());
+            facility.setDescription(facilityRequest.getDescription());
+            facility.setPricePerHour(facilityRequest.getPricePerHour());
+            facility.setAssistant(user);
+            facility.getCategories().add(category);
+        }
+        return ResponseEntity.created(uri).body(facilityService.addNewFacility(facility));
     }
+
+
 
     /**Edita un servicio de la base de datos - works! */
     @PreAuthorize("hasRole('FACILITY') or hasRole('ADMIN')")
     @PutMapping("/edit")
     public ResponseEntity<Facility> editFacility(@RequestBody Facility facility){
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/facility/create").toUriString());
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/facility/edit").toUriString());
         return ResponseEntity.created(uri).body(facilityService.updateFacility(facility));
     }
 

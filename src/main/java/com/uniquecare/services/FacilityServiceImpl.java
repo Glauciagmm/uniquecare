@@ -1,7 +1,12 @@
 package com.uniquecare.services;
 
 
+import com.uniquecare.models.Contract;
 import com.uniquecare.models.Facility;
+import com.uniquecare.models.User;
+import com.uniquecare.payload.request.ContractRequest;
+import com.uniquecare.payload.request.FacilityRequest;
+import com.uniquecare.repositories.ContractRepository;
 import com.uniquecare.repositories.FacilityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +21,7 @@ import java.util.List;
 public class FacilityServiceImpl implements IFacilityService {
 
     private final FacilityRepository facilityRepository;
+
 
     @Autowired
     public FacilityServiceImpl(FacilityRepository facilityRepository) {
@@ -64,7 +70,13 @@ public class FacilityServiceImpl implements IFacilityService {
         return facilityRepository.save(facility);
     }
 
-    @Override
-    public List<Facility> getContractByUserID (Long userId){
-        return null;}
+
+
 }
+
+   /* @Override
+    public Boolean existsByClientAndFacilityAndStartAndFinish(ContractRequest contractRequest) {
+        User client = userService.getUserById(contractRequest.getClient_id());
+        Facility facility = facilityService.findFacilityById(contractRequest.getFacility_id());
+        return contractRepository.existsByClientAndFacilityAndStartAndFinish(client, facility, contractRequest.getStart(), contractRequest.getFinish());
+    }*/

@@ -10,9 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -47,12 +45,6 @@ public class ContractServiceImpl implements IContractService {
     }
 
     @Override
-    public void deleteContractById(Long id) {
-        contractRepository.deleteById(id);
-    }
-
-
-    @Override
     public Contract createContractRequest (ContractRequest contractRequest) throws ContractException {
         User client = userService.getUserById(contractRequest.getClient_id());
         Facility facility = facilityService.findFacilityById(contractRequest.getFacility_id());
@@ -72,52 +64,57 @@ public class ContractServiceImpl implements IContractService {
         User client = userService.getUserById(contractRequest.getClient_id());
         Facility facility = facilityService.findFacilityById(contractRequest.getFacility_id());
         return contractRepository.existsByClientAndFacilityAndStartAndFinish(client, facility, contractRequest.getStart(), contractRequest.getFinish());
+    }
 
+
+    @Override
+    public List<Contract> findContractByClientAndState(ContractRequest contractRequest) throws ContractException{
+        User client = userService.getUserById(contractRequest.getClient_id());
+        contractRequest.getState(Contract.State.OPEN);
+        contractRequest.getState(Contract.State.ACCEPTED);
+        contractRequest.getState(Contract.State.DECLINED);
+        return contractRepository.findContractByClientAndState( client,contractRequest.getState());
+    }
+
+
+    @Override
+    public Contract findContractByState(Contract.State state) {
+        return contractRepository.findContractByState(state);
+    }
+
+    @Override
+    public void deleteContractById(Long id) {
+        contractRepository.deleteById(id);
+    }
+
+
+
+    @Override
+    public List<Contract> findContractByFacilityId(ContractRequest contractRequest) throws ContractException {
+        return contractRepository.findContractByFacilityId(contractRequest.getFacility_id());
+    }
+
+    @Override
+    public List<Contract> findAllByFacilityAssistant(User assistant) {
+        return contractRepository.findAllByFacilityAssistant(assistant);
+    }
+
+    @Override
+    public List<Contract> findAllByClient(User client) {
+        return contractRepository.findAllByClient(client);
     }
 
     @Override
     public Contract updateContract(ContractRequest contractRequest) throws ContractException{
-        User client = userService.getUserById(contractRequest.getClient_id());
-        Facility facility = facilityService.findFacilityById(contractRequest.getFacility_id());
-        if (client.getContract().contains(facility)) {
-            throw new ContractException("Request are already accepted");
-        } else if (!contractRepository
-                .findByClientAndFacilityAndState(client, facility, Contract.State.DECLINED).isEmpty()) {
-            throw new ContractException("This request was already refused");
-        }
-        return null;
-                //contractRepository.save(contractRequest);
+            Contract contract = contractRepository.findById(contractRequest.getId()).orElseThrow(RuntimeException::new);
+            contract.setStart(contractRequest.getStart());
+            contract.setFinish(contractRequest.getFinish());
+            return contractRepository.save(contract);
     }
 
     @Override
-    public List<Contract> getContractByUser(Long userId) {
-        return userService.getContractByUserId(userId);
-    }
-
-
-    @Override
-    public List<Contract> getContractByAssistant(Long assistantId) {
-        return userService.getContractByAssistantId(assistantId);
-    }
-
-     @Override
-    public List<Contract> getAllRequest(User client, Facility facility, Contract.State state) throws ContractException {
-        List<Contract> request = contractRepository.findByClientAndFacilityAndState(client, facility,state);
-        if (!request.isEmpty()){
-            throw new ContractException("No contracts to show");
-        } else {
-            return contractRepository.findAll();
-        }
-    }
-
-    @Override
-    public List<Contract> getOpenRequest(Contract.State state) throws ContractException {
-        return null;
-    }
-
-    @Override
-    public List<Contract> findByFacilityAndState(Facility facility, Contract.State state) {
-        return contractRepository.findByFacilityAndState(facility, state);
+    public List<Contract> findByFacilityAndState(Long facilityId, Contract.State state) {
+        return contractRepository.findByFacilityAndState(facilityId, state);
     }
 }
 

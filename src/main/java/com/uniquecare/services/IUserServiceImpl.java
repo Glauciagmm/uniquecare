@@ -1,7 +1,9 @@
 package com.uniquecare.services;
 
+import com.uniquecare.Exceptions.ContractException;
 import com.uniquecare.models.Contract;
 import com.uniquecare.models.ERole;
+import com.uniquecare.models.Facility;
 import com.uniquecare.models.User;
 import com.uniquecare.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -36,31 +38,27 @@ public class IUserServiceImpl implements IUserService {
     }
 
     @Override
-    public User getUserById(Long userId) {
-        return userRepository.findById(userId).orElse(null);
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 
-    @Override
+   /* @Override
     public Optional<User> getUserByUsername(String username) {
         log.info("Fetching user {}",  username);
         return userRepository.findByUsername(username);
-    }
+    }*/
 
-    @Override
-    public List<Contract> getContractByUserId(Long userId) {
-        return null;
-    }
 
     /*@Override
      public List<Contract> getContractByUserId(Long userId) {
          return contractRepository.findAll();
      }*/
 
-    @Override
+  /*  @Override
     public Optional<User> findByUsername(String username) {
         log.info("Fetching user {}",  username);
         return userRepository.findByUsername(username);
-    }
+    }*/
 
     @Override
     public User saveUser(User user) {
@@ -79,16 +77,16 @@ public class IUserServiceImpl implements IUserService {
         userRepository.deleteById(id);
     }
 
-    @Override
-    public Optional<User> getUser(String username) {
-        log.info("Fetching user {}",  username);
-        return userRepository.findByUsername(username);
-    }
+//    @Override
+//    public Optional<User> getUser(String username) {
+//        log.info("Fetching user {}",  username);
+//        return userRepository.findByUsername(username);
+//    }
 
-    @Override
-    public List<Contract> getContractByAssistantId(Long assistantId) {
-        return null;
-    }
+   /* @Override
+    public List<Contract> getContractByClientId(Long clientId) {
+        return userRepository.getContractByClientId(clientId);
+    }*/
 
     /** works*/
     @Override
@@ -104,4 +102,9 @@ public class IUserServiceImpl implements IUserService {
     public Boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
+
+   /* @Override
+    public List<Contract> getContractByUser(Contract state, User assistant) throws ContractException {
+        return userRepository.getContractByUser(state, assistant);
+    }*/
 }
