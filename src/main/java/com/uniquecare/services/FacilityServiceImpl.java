@@ -1,12 +1,6 @@
 package com.uniquecare.services;
 
-
-import com.uniquecare.models.Contract;
 import com.uniquecare.models.Facility;
-import com.uniquecare.models.User;
-import com.uniquecare.payload.request.ContractRequest;
-import com.uniquecare.payload.request.FacilityRequest;
-import com.uniquecare.repositories.ContractRepository;
 import com.uniquecare.repositories.FacilityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
