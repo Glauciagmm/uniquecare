@@ -22,6 +22,7 @@ public class Categories {
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
+                   CascadeType.REMOVE,
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             },

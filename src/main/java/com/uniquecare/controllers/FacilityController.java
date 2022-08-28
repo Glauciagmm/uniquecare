@@ -1,5 +1,6 @@
 package com.uniquecare.controllers;
 
+import com.uniquecare.Exceptions.ResourceNotFoundException;
 import com.uniquecare.models.Categories;
 import com.uniquecare.models.Facility;
 import com.uniquecare.models.User;
@@ -9,6 +10,7 @@ import com.uniquecare.repositories.RoleRepository;
 import com.uniquecare.repositories.UserRepository;
 import com.uniquecare.services.IFacilityService;
 import com.uniquecare.services.UserDetailsImpl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -55,12 +57,27 @@ public class FacilityController {
             System.out.println(username);
         }return ResponseEntity.ok().body(facilityService.getAllFacilities());
     }
+    @GetMapping("/{assistantId}")
+    public ResponseEntity<List<Facility>> getAllFacilitiesByAssistantId(@PathVariable(value = "assistantId") Long assistantId) {
+        if (!userRepository.existsById(assistantId)) {
+            throw new ResourceNotFoundException("Not found facilities  with this assistant id = " + assistantId);
+        }
+        List<Facility> facilities =facilityService.getAllFacilitiesByAssistantId(assistantId);
+        return new ResponseEntity<>(facilities, HttpStatus.OK);
+    }
+/*//Filtra x ubicacion!
+    @GetMapping ("/ubication/{city}")
+    public ResponseEntity<List<Facility>> findFacilitiesByCity(@PathVariable String city) {
+        return ResponseEntity.ok().body(facilityService.getAllFacilitiesByCity(city));
+    }*/
+
 
 
     /**Crea un nuevo servicio y le pasa el user que lo ha creado (user logueado)- works! */
-    @PreAuthorize("hasRole('FACILITY')")
+    @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
     @PostMapping("/create")
-    public ResponseEntity<Facility> addFacility(Authentication authentication, @RequestBody Facility facility, Categories category) {
+    public ResponseEntity<Facility> addFacility(Authentication authentication, @RequestBody FacilityRequest facilityRequest,
+                                                Categories category,Facility facility) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/facility/create").toUriString());
         if (authentication == null) {
             System.out.println("Es necesario que hagas el login");
@@ -69,8 +86,15 @@ public class FacilityController {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             System.out.println(userDetails.getUsername());
             User user = userRepository.getByUsername(userDetails.getUsername());
-            Categories categories = categoryRepository.getCategoryByName(category.getName());
+            category = categoryRepository.findById(facilityRequest.getCategoryId()).orElseThrow(RuntimeException::new);
+
+            facility = new Facility();
+            facility.setTitle(facilityRequest.getTitle());
+            facility.setDescription(facilityRequest.getDescription());
+            facility.setPricePerHour(facilityRequest.getPricePerHour());
+            facility.getCategories().add(category);
             facility.setAssistant(user);
+           /*facility.getCategories().add()*/
             //System.out.println(username);
         }
         return ResponseEntity.created(uri).body(facilityService.addNewFacility(facility));
@@ -85,7 +109,7 @@ public class FacilityController {
     }
 
     /**Borra un servicio de la base de datos - works! */
-    @PreAuthorize("hasRole('FACILITY') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteFacilityById(@PathVariable Long id){
         facilityService.deleteFacilityById(id);

@@ -144,6 +144,7 @@ public class User {
         this.photo = photo;
     }
 
+
     public Set<Contract> getContract() {
         return contract;
     }

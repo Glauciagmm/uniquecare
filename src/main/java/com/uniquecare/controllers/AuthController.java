@@ -118,6 +118,9 @@ public class AuthController {
                     default:
                         Role userRole = roleService.findByName(ERole.ROLE_USER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        Role facilityRoleDefault = roleService.findByName(ERole.ROLE_FACILITY)
+                         .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(facilityRoleDefault);
                         roles.add(userRole);
                 }
             });

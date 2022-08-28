@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+
 @Table(name = "facility")
 public class Facility {
     @Id
@@ -16,7 +17,7 @@ public class Facility {
     private String description;
     private double pricePerHour;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     @JoinTable(name = "facility_categories",
             joinColumns = {@JoinColumn(name = "facility_id")},
             inverseJoinColumns = {@JoinColumn(name = "category_id")})
@@ -26,7 +27,13 @@ public class Facility {
             property = "id")
     private Set<Categories> categories = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER,
+            cascade = {
+//                    CascadeType.REMOVE,
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            }
+    )
     @JoinColumn(name = "assistant_id", referencedColumnName = "id")
     @JsonIgnoreProperties({"facility", "roles"})
     @JsonIdentityInfo(
