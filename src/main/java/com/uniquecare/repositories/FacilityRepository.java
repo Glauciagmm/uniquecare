@@ -12,7 +12,7 @@ public interface FacilityRepository extends JpaRepository<Facility, Long> {
     List<Facility> findFacilitiesByCategoriesName(String categoryName);
     List<Facility>findFacilitiesByAssistantId(Long assistantId);
 
-    List<Facility>findFacilitiesByCity(Long assistantId);
+    /*List<Facility>findFacilitiesByCity(String city);*/
     List<Facility> getContractByAssistantId(Long assistantId);
     Facility getFacilityById (Long facilityId);
 }

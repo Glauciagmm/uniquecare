@@ -17,7 +17,7 @@ public class Facility {
     private String description;
     private double pricePerHour;
 
-    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.REFRESH)
     @JoinTable(name = "facility_categories",
             joinColumns = {@JoinColumn(name = "facility_id")},
             inverseJoinColumns = {@JoinColumn(name = "category_id")})
@@ -29,7 +29,7 @@ public class Facility {
 
     @ManyToOne(fetch = FetchType.EAGER,
             cascade = {
-//                    CascadeType.REMOVE,
+                  CascadeType.REFRESH,
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             }
