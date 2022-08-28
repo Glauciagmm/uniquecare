@@ -40,14 +40,14 @@ public class FacilityController {
     }
 
     /**Encuentra un servicio cuando le pasas su ID - Todos los roles tienen permiso para hacerlo*/
-    @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
     @GetMapping("/single/{id}")
     public Facility findFacilityById(@PathVariable("id") Long id){
         return facilityService.findFacilityById(id);
     }
 
     /**Lista todos los servicios de la base de datos - works! */
-    @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
     @GetMapping("/list")
     public ResponseEntity<List<Facility>>getFacility(Authentication authentication, HttpSession session){
         if (authentication == null){
@@ -57,6 +57,26 @@ public class FacilityController {
             System.out.println(username);
         }return ResponseEntity.ok().body(facilityService.getAllFacilities());
     }
+
+    //Filtra x ubicacion!
+    @GetMapping ("/ubication/{city}")
+    public ResponseEntity<List<Facility>> findFacilitiesByCity(Authentication authentication,@PathVariable String city) {
+        if (!userRepository.existsByCity(city)) {
+            throw new ResourceNotFoundException("Not found facilities  with this assistant city = " + city);
+        }
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User user = userRepository.getByUserCity(userDetails.getCity());
+        if(user.getCity() =="Barcelona") {
+            return ResponseEntity.ok().body(facilityService.getAllFacilitiesByAssistantCity(city));
+        }else  if (city=="Valencia"){
+            return ResponseEntity.ok().body(facilityService.getAllFacilitiesByAssistantCity(city));
+        }else  if (city=="Madrid"){
+            return ResponseEntity.ok().body(facilityService.getAllFacilitiesByAssistantCity(city));
+        }
+        List<Facility> facilities =facilityService.getAllFacilities();
+        return new ResponseEntity<>(facilities, HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
     @GetMapping("/{assistantId}")
     public ResponseEntity<List<Facility>> getAllFacilitiesByAssistantId(@PathVariable(value = "assistantId") Long assistantId) {
         if (!userRepository.existsById(assistantId)) {
@@ -65,11 +85,7 @@ public class FacilityController {
         List<Facility> facilities =facilityService.getAllFacilitiesByAssistantId(assistantId);
         return new ResponseEntity<>(facilities, HttpStatus.OK);
     }
-/*//Filtra x ubicacion!
-    @GetMapping ("/ubication/{city}")
-    public ResponseEntity<List<Facility>> findFacilitiesByCity(@PathVariable String city) {
-        return ResponseEntity.ok().body(facilityService.getAllFacilitiesByCity(city));
-    }*/
+
 
 
 

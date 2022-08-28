@@ -13,6 +13,8 @@ public interface IFacilityService {
     /** works*/
     List<Facility> getAllFacilitiesByCategoriesId(Long categoryId);
     List <Facility> getAllFacilitiesByCategoriesName(String categoryName);
+
+    List <Facility> getAllFacilitiesByAssistantCity(String city);
     List <Facility> getAllFacilitiesByAssistantId(Long assistantId);
     void deleteFacilityById(Long id);
     /** works*/
