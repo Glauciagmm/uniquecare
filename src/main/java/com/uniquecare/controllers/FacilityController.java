@@ -46,15 +46,9 @@ public class FacilityController {
     }
 
     /**Lista todos los servicios de la base de datos - works! */
-    @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
     @GetMapping("/list")
-    public ResponseEntity<List<Facility>>getFacility(Authentication authentication, HttpSession session){
-        if (authentication == null){
-            System.out.println("Es necesario que hagas el login");
-        }else{
-            String username = authentication.getPrincipal().toString();
-            System.out.println(username);
-        }return ResponseEntity.ok().body(facilityService.getAllFacilities());
+    public ResponseEntity<List<Facility>>getFacility(){
+          return ResponseEntity.ok().body(facilityService.getAllFacilities());
     }
 
 
