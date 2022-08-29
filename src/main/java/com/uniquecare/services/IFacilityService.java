@@ -1,8 +1,7 @@
 package com.uniquecare.services;
 
 import com.uniquecare.models.Facility;
-import com.uniquecare.payload.request.FacilityRequest;
-
+import com.uniquecare.models.User;
 import java.util.List;
 
 public interface IFacilityService {
@@ -13,6 +12,6 @@ public interface IFacilityService {
     List <Facility> getAllFacilitiesByCategoriesName(String categoryName);
     List <Facility> getAllFacilitiesByAssistantId(Long assistantId);
     void deleteFacilityById(Long id);
-    /** works*/
     Facility updateFacility(Facility facility);
+    List<Facility> findAllByAssistant(User assistant);
 }

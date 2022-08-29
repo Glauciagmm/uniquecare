@@ -14,7 +14,7 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     List<Contract> findByFacilityAndState(Long facilityId, Contract.State state);
     List <Contract> findAllByFacilityAssistant(User assistant);
     List <Contract> findAllByClient(User client);
-    Boolean existsByClientAndFacilityAndStartAndFinish(User client, Facility facility, Date start, Date finish);
+    Boolean existsByClientAndFacilityAndStartAndFinish(User client, Facility facility, String start, String finish);
     Contract findContractByState(Contract.State state);
     List<Contract> findContractByFacilityId(Long facility_id);
     List<Contract> findContractByClientAndState(User client, Contract.State state);

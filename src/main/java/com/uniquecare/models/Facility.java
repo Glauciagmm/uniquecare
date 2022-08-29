@@ -31,9 +31,9 @@ public class Facility {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "assistant_id", referencedColumnName = "id")
     @JsonIgnoreProperties({"facility", "roles"})
-    @JsonIdentityInfo(
+ /*   @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
+            property = "id")*/
     private User assistant;
 
     @OneToMany(mappedBy = "facility")

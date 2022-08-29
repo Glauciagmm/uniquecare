@@ -1,6 +1,7 @@
 package com.uniquecare.services;
 
 import com.uniquecare.models.Facility;
+import com.uniquecare.models.User;
 import com.uniquecare.repositories.FacilityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,10 @@ public class FacilityServiceImpl implements IFacilityService {
         return facilityRepository.save(facility);
     }
 
+    @Override
+    public List<Facility> findAllByAssistant(User assistant) {
+        return facilityRepository.findAllByAssistant(assistant);
+    }
 
 
 }

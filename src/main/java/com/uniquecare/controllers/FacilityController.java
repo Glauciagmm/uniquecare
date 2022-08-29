@@ -5,9 +5,9 @@ import com.uniquecare.models.Facility;
 import com.uniquecare.models.User;
 import com.uniquecare.payload.request.FacilityRequest;
 import com.uniquecare.repositories.CategoriesRepository;
-import com.uniquecare.repositories.RoleRepository;
 import com.uniquecare.repositories.UserRepository;
 import com.uniquecare.services.IFacilityService;
+import com.uniquecare.services.IUserService;
 import com.uniquecare.services.UserDetailsImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,13 +28,14 @@ public class FacilityController {
     private final IFacilityService facilityService;
     private final CategoriesRepository categoryRepository;
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final IUserService userService;
 
-    public FacilityController(IFacilityService facilityService, CategoriesRepository categoryRepository, UserRepository userRepository, RoleRepository roleRepository) {
+
+    public FacilityController(IFacilityService facilityService, CategoriesRepository categoryRepository, UserRepository userRepository, IUserService userService) {
         this.facilityService = facilityService;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
-        this.roleRepository = roleRepository;
+        this.userService = userService;
     }
 
     /**Encuentra un servicio cuando le pasas su ID - Todos los roles tienen permiso para hacerlo*/
@@ -114,6 +115,13 @@ public class FacilityController {
         facilityService.deleteFacilityById(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/assistant/")
+    public List<Facility> userFacilities (Authentication authentication){
+        User user = userService.getByUsername(authentication.getName());
+        return facilityService.findAllByAssistant(user);
+    }
+
 }
 
 
