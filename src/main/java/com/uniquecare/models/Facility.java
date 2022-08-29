@@ -2,6 +2,8 @@ package com.uniquecare.models;
 
 
 import com.fasterxml.jackson.annotation.*;
+import lombok.AllArgsConstructor;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,9 +38,9 @@ public class Facility {
     )
     @JoinColumn(name = "assistant_id", referencedColumnName = "id")
     @JsonIgnoreProperties({"facility", "roles"})
-    @JsonIdentityInfo(
+ /*   @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
+            property = "id")*/
     private User assistant;
 
     @OneToMany(mappedBy = "facility")
@@ -52,33 +54,25 @@ public class Facility {
     public Facility() {
     }
 
-    public Facility(Long id, String title, String description, double pricePerHour, Set<Categories> categories, User assistant, Set<Contract> contract) {
+    public Facility(Long id, String title, String description, double pricePerHour, Set<Categories> categories, User assistant) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.pricePerHour = pricePerHour;
         this.categories = categories;
         this.assistant = assistant;
-        this.contract = contract;
+    }
+
+    public Facility(String title, String description, double pricePerHour, Set<Categories> categories, User assistant) {
+        this.title = title;
+        this.description = description;
+        this.pricePerHour = pricePerHour;
+        this.categories = categories;
+        this.assistant = assistant;
     }
 
     public Facility(Long id) {
         this.id = id;
-    }
-
-    public Facility(String title, String description, double pricePerHour, Set<Categories> categories, User assistant, Set<Contract> contract) {
-        this.title = title;
-        this.description = description;
-        this.pricePerHour = pricePerHour;
-        this.categories = categories;
-        this.assistant = assistant;
-        this.contract = contract;
-    }
-
-    public Facility(String title, String description, double pricePerHour) {
-        this.title = title;
-        this.description = description;
-        this.pricePerHour = pricePerHour;
     }
 
     public Long getId() {

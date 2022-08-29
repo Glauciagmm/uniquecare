@@ -32,5 +32,8 @@ public class Role {
         this.name = name;
     }
 
-
+    public Role(Integer id, ERole name) {
+        this.id = id;
+        this.name = name;
+    }
 }

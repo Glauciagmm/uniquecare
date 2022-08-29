@@ -3,12 +3,11 @@ package com.uniquecare.payload.request;
 
 import com.uniquecare.models.Contract;
 
-import java.util.Date;
 
 public class ContractRequest {
     private Long id;
-    private Date start;
-    private Date finish;
+    private String start;
+    private String finish;
     private double totalPrice;
     private Long facility_id;
     private Long client_id;
@@ -22,19 +21,19 @@ public class ContractRequest {
         this.id = id;
     }
 
-    public Date getStart() {
+    public String getStart() {
         return start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(String start) {
         this.start = start;
     }
 
-    public Date getFinish() {
+    public String getFinish() {
         return finish;
     }
 
-    public void setFinish(Date finish) {
+    public void setFinish(String finish) {
         this.finish = finish;
     }
 

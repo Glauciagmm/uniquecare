@@ -53,7 +53,7 @@ public class User {
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
-    @JsonIgnoreProperties("client")
+    //@JsonIgnoreProperties("client")
     private Set<Contract> contract = new HashSet<>();
 
     public Long getId() {
@@ -181,6 +181,19 @@ public class User {
         this.city = city;
         this.phone = phone;
         this.photo = photo;
+    }
+
+    public User(Long id, String name, String surname, String username, String email, String city, String phone, String photo, String password, Set<Role> roles) {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.username = username;
+        this.email = email;
+        this.city = city;
+        this.phone = phone;
+        this.photo = photo;
+        this.password = password;
+        this.roles = roles;
     }
 
     void addRole(Role roles) {

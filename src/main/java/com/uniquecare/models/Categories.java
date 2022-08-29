@@ -35,6 +35,11 @@ public class Categories {
 
     public Categories() {}
 
+    public Categories(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Categories(Long id, String name, Set<Facility> facilities) {
         this.id = id;
         this.name = name;

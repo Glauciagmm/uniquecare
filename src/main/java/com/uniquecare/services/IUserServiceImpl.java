@@ -1,17 +1,15 @@
 package com.uniquecare.services;
 
-import com.uniquecare.models.Contract;
 import com.uniquecare.models.ERole;
 import com.uniquecare.models.User;
 import com.uniquecare.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @Transactional
@@ -36,30 +34,8 @@ public class IUserServiceImpl implements IUserService {
     }
 
     @Override
-    public User getUserById(Long userId) {
-        return userRepository.findById(userId).orElse(null);
-    }
-
-    @Override
-    public Optional<User> getUserByUsername(String username) {
-        log.info("Fetching user {}",  username);
-        return userRepository.findByUsername(username);
-    }
-
-    @Override
-    public List<Contract> getContractByUserId(Long userId) {
-        return null;
-    }
-
-    /*@Override
-     public List<Contract> getContractByUserId(Long userId) {
-         return contractRepository.findAll();
-     }*/
-
-    @Override
-    public Optional<User> findByUsername(String username) {
-        log.info("Fetching user {}",  username);
-        return userRepository.findByUsername(username);
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -79,17 +55,6 @@ public class IUserServiceImpl implements IUserService {
         userRepository.deleteById(id);
     }
 
-    @Override
-    public Optional<User> getUser(String username) {
-        log.info("Fetching user {}",  username);
-        return userRepository.findByUsername(username);
-    }
-
-    @Override
-    public List<Contract> getContractByAssistantId(Long assistantId) {
-        return null;
-    }
-
     /** works*/
     @Override
     public User getByUsername(String username) {
@@ -104,4 +69,6 @@ public class IUserServiceImpl implements IUserService {
     public Boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
+
+
 }

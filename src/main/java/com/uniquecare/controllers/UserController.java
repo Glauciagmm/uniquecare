@@ -7,6 +7,7 @@ import com.uniquecare.services.IUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,10 +37,16 @@ public class UserController {
     }
 
     /**Encuentra un usuario por su ID - works! */
-    @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
+    /*@PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
     @GetMapping("/user/{id}")
-    public Optional<User> findUserById(@PathVariable("id") Long id) {
+    public User findUserById(@PathVariable Long id) {
         return userRepository.findById(id);
+    }*/
+
+    @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
+    @GetMapping("/currentuser")
+    public Optional<User> getUser(Authentication authentication) {
+        return Optional.ofNullable(userRepository.getByUsername(authentication.getName()));
     }
 
     /**Edita un usuario sin editar la contraseña - works!*/
@@ -59,9 +66,11 @@ public class UserController {
 
     /**Borra un user de la base de datos - works! */
     @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("/user/delete/{id}")
     public ResponseEntity<Boolean> deleteUser(@PathVariable("id") Long id){
         userService.deleteUserById(id);
         return new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.OK);
     }
+
+
 }

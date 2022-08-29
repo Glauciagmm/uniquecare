@@ -103,7 +103,7 @@ public class SignupRequest {
         this.photo = photo;
     }
 
-    public SignupRequest(String name, String surname, String username, String email, String city, String phone, String photo, String password) {
+    public SignupRequest(String name, String surname, String username, String email, String city, String phone, String photo, String password, Set<String> role) {
         this.name = name;
         this.surname = surname;
         this.username = username;

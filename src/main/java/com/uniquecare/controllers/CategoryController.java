@@ -72,7 +72,9 @@ public class CategoryController {
         }
         List<Facility> facilities = facilityRepository.findFacilitiesByCategoriesId(categoryId);
         return new ResponseEntity<>(facilities, HttpStatus.OK);
+
     }
 
-}
+  }
+
 

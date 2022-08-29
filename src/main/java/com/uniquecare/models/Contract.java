@@ -19,25 +19,25 @@ public class Contract {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Date start;
-    private Date finish;
+    private String  start;
+    private String  finish;
     private double totalPrice;
     private State state;
 
     @ManyToOne
     @JoinColumn(name = "facility_id", referencedColumnName = "id", nullable = false)
     @JsonIgnoreProperties({"contract"})
-    @JsonIdentityInfo(
+    /*@JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
+            property = "id")*/
     private Facility facility;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "client_id", referencedColumnName = "id", nullable = false)
     @JsonIgnoreProperties({"contract", "facility", "roles"})
-    @JsonIdentityInfo(
+    /*@JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
+            property = "id")*/
     private User client;
 
     public Contract() {
@@ -51,19 +51,19 @@ public class Contract {
         this.id = id;
     }
 
-    public Date getStart() {
+    public String getStart() {
         return start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(String start) {
         this.start = start;
     }
 
-    public Date getFinish() {
+    public String getFinish() {
         return finish;
     }
 
-    public void setFinish(Date finish) {
+    public void setFinish(String finish) {
         this.finish = finish;
     }
 
