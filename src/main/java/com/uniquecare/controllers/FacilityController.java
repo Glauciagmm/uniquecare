@@ -21,6 +21,7 @@ import javax.servlet.http.HttpSession;
 import java.net.URI;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/facility")
@@ -96,9 +97,13 @@ public class FacilityController {
     /**Permits a user to edit his on service data*/
     @PreAuthorize("hasRole('FACILITY') or hasRole('ADMIN')")
     @PutMapping("/edit")
-    public ResponseEntity<Facility> editFacility(@RequestBody Facility facility){
+    public ResponseEntity<Facility> editFacility(@RequestBody FacilityRequest facilityRequest){
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/facility/edit").toUriString());
-        return ResponseEntity.created(uri).body(facilityService.updateFacility(facility));
+        Facility facilityEdit = facilityService.findFacilityById(facilityRequest.getId());
+        facilityEdit.setTitle(facilityRequest.getTitle());
+        facilityEdit.setDescription(facilityRequest.getDescription());
+        facilityEdit.setPricePerHour(facilityRequest.getPricePerHour());
+        return ResponseEntity.created(uri).body(facilityService.updateFacility(facilityEdit));
     }
 
     /**Permits a user to delete a service that don't have a FK with contract*/
