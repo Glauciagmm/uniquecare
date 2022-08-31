@@ -56,6 +56,12 @@ public class FacilityController {
           return ResponseEntity.ok().body(facilityService.getAllFacilities());
     }
 
+    //Filtra x ubicacion!
+    @GetMapping ("/ubication/{city}")
+    public ResponseEntity<List<Facility>> findFacilitiesByCity(@PathVariable String city) {
+        return ResponseEntity.ok().body(facilityService.getAllFacilitiesByAssistantCity(city));
+    }
+
   /*  //Filtra x ubicacion!
     @GetMapping ("/ubication/{city}")
     public ResponseEntity<List<Facility>> findFacilitiesByCity(Authentication authentication,@PathVariable String city) {

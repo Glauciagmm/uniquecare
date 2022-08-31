@@ -53,9 +53,8 @@ public class FacilityServiceImpl implements IFacilityService {
     public List<Facility> getAllFacilitiesByCategoriesId (Long categoryId){
         return facilityRepository.findFacilitiesByCategoriesId(categoryId);}
 
-   @Override
-
-    public List<Facility> getAllFacilitiesByAssistantCity (String city) {
+    @Override
+    public List<Facility> getAllFacilitiesByAssistantCity(String city) {
         return facilityRepository.findFacilitiesByAssistantCity(city);
     }
 
