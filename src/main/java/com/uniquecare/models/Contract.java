@@ -27,17 +27,11 @@ public class Contract {
     @ManyToOne
     @JoinColumn(name = "facility_id", referencedColumnName = "id", nullable = false)
     @JsonIgnoreProperties({"contract"})
-    /*@JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")*/
     private Facility facility;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "client_id", referencedColumnName = "id", nullable = false)
     @JsonIgnoreProperties({"contract", "facility", "roles"})
-    /*@JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")*/
     private User client;
 
     public Contract() {

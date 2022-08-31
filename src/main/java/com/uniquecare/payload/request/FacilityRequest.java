@@ -1,10 +1,5 @@
 package com.uniquecare.payload.request;
 
-import com.uniquecare.models.Contract;
-
-import java.util.HashSet;
-import java.util.Set;
-
 public class FacilityRequest {
     private Long id;
     private String title;

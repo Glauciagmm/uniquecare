@@ -53,7 +53,6 @@ public class User {
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
-    //@JsonIgnoreProperties("client")
     private Set<Contract> contract = new HashSet<>();
 
     public Long getId() {

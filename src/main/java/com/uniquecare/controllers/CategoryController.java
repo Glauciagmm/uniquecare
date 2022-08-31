@@ -1,10 +1,8 @@
 package com.uniquecare.controllers;
 
 
-import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
-
 import com.uniquecare.Exceptions.ResourceNotFoundException;
 import com.uniquecare.models.Categories;
 import com.uniquecare.models.Facility;
@@ -16,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 
 @RestController
 @CrossOrigin(origins="*")
@@ -36,8 +34,6 @@ public class CategoryController {
         this.facilityRepository = facilityRepository;
     }
 
-
-
     @GetMapping("/list")
     public ResponseEntity<List<Categories>> Category(Authentication authentication) {
         return ResponseEntity.ok(categoryService.getAllCategories());
@@ -47,24 +43,13 @@ public class CategoryController {
     public Categories createNewEvent (@RequestBody @Valid Categories category){
         return categoryService.addNewCategory(category);
     }
-    /*@PostMapping("/create")
-    public ResponseEntity<Categories> saveCategory(@Valid @RequestBody Categories category) {
-        Categories categorySaved = categoryService.addNewCategory(category);
-        URI ubication = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(categorySaved.getFacilities()).toUri();
-        return ResponseEntity.created(ubication).body(categorySaved);
-    }*/
 
     @GetMapping("/{id}")
     public Categories getCategoryById(@PathVariable Long id) {
         return categoryService.getById(id);
     }
 
-
-
     /**funcionalidad  de filtrar el servicio por categoria */
-
-
   @GetMapping("/{categoryId}/facilities")
     public ResponseEntity<List<Facility>> getAllFacilitiesByCategoryId(@PathVariable(value = "categoryId") Long categoryId) {
         if (!categoriesRepository.existsById(categoryId)) {

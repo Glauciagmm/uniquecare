@@ -29,27 +29,28 @@ public class UserController {
         this.encoder = encoder;
     }
 
-    /**Lista todos los usuaruios de la base de datos - works! */
-
+    /**List all users registered on the application */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/user")
     public ResponseEntity<List<User>> getUsers(){
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
-    /**Encuentra un usuario por su ID - works! */
-    /*@PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
+    /**Permits to find a user by id*/
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/user/{id}")
-    public User findUserById(@PathVariable Long id) {
+    public Optional<User> findUserById(@PathVariable Long id) {
         return userRepository.findById(id);
-    }*/
+    }
 
+    /**Get the information of the user logged*/
     @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
     @GetMapping("/currentuser")
     public Optional<User> getUser(Authentication authentication) {
         return Optional.ofNullable(userRepository.getByUsername(authentication.getName()));
     }
 
-    /**Edita un usuario sin editar la contraseña - works!*/
+    /**Permits a user to edit themselves profile*/
     @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
     @PutMapping("/user/edit/{id}")
     public User updateUser (@RequestBody User profileRequest) {
@@ -64,13 +65,11 @@ public class UserController {
         return userService.updateUser(user);
     }
 
-    /**Borra un user de la base de datos - works! */
+    /**Permits a user to delete themselves profile! */
     @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
     @DeleteMapping("/user/delete/{id}")
     public ResponseEntity<Boolean> deleteUser(@PathVariable("id") Long id){
         userService.deleteUserById(id);
         return new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.OK);
     }
-
-
 }

@@ -31,16 +31,12 @@ public class Facility {
 
     @ManyToOne(fetch = FetchType.EAGER,
             cascade = {
-//                    CascadeType.REMOVE,
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             }
     )
     @JoinColumn(name = "assistant_id", referencedColumnName = "id")
     @JsonIgnoreProperties({"facility", "roles"})
- /*   @JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")*/
     private User assistant;
 
     @OneToMany(mappedBy = "facility")

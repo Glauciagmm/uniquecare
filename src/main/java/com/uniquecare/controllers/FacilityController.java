@@ -40,46 +40,26 @@ public class FacilityController {
         this.userService = userService;
     }
 
-    /**Encuentra un servicio cuando le pasas su ID - Todos los roles tienen permiso para hacerlo*/
-    //@PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
-    @GetMapping("/single/{id}")
-    public Facility findFacilityById(@PathVariable("id") Long id){
-        return facilityService.findFacilityById(id);
-    }
-
-    /**Lista todos los servicios de la base de datos - works! */
-
-    //@PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
-
+    /**List all the services registered on the application*/
     @GetMapping("/list")
     public ResponseEntity<List<Facility>>getFacility(){
           return ResponseEntity.ok().body(facilityService.getAllFacilities());
     }
 
-    //Filtra x ubicacion!
+    /**Find a service by its id*/
+    @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
+    @GetMapping("/single/{id}")
+    public Facility findFacilityById(@PathVariable("id") Long id){
+        return facilityService.findFacilityById(id);
+    }
+
+    /**Permits a user to filter all the service in a specific location*/
     @GetMapping ("/ubication/{city}")
     public ResponseEntity<List<Facility>> findFacilitiesByCity(@PathVariable String city) {
         return ResponseEntity.ok().body(facilityService.getAllFacilitiesByAssistantCity(city));
     }
 
-  /*  //Filtra x ubicacion!
-    @GetMapping ("/ubication/{city}")
-    public ResponseEntity<List<Facility>> findFacilitiesByCity(Authentication authentication,@PathVariable String city) {
-        if (!userRepository.existsByCity(city)) {
-            throw new ResourceNotFoundException("Not found facilities  with this assistant city = " + city);
-        }
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        User user = userRepository.getByUserCity(userDetails.getCity());
-        if(user.getCity() =="Barcelona") {
-            return ResponseEntity.ok().body(facilityService.getAllFacilitiesByAssistantCity(city));
-        }else  if (city=="Valencia"){
-            return ResponseEntity.ok().body(facilityService.getAllFacilitiesByAssistantCity(city));
-        }else  if (city=="Madrid"){
-            return ResponseEntity.ok().body(facilityService.getAllFacilitiesByAssistantCity(city));
-        }
-        List<Facility> facilities =facilityService.getAllFacilities();
-        return new ResponseEntity<>(facilities, HttpStatus.OK);
-    }*/
+    /**Permits to find all services of a specific assistant*/
     @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
     @GetMapping("/{assistantId}")
     public ResponseEntity<List<Facility>> getAllFacilitiesByAssistantId(@PathVariable(value = "assistantId") Long assistantId) {
@@ -90,40 +70,7 @@ public class FacilityController {
         return new ResponseEntity<>(facilities, HttpStatus.OK);
     }
 
-
-
-
-    /**Crea un nuevo servicio y le pasa el user que lo ha creado (user logueado)- works!
-
-    @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
-
-    @PreAuthorize("hasRole('FACILITY')")
-
-    @PostMapping("/create")
-    public ResponseEntity<Facility> addFacility(Authentication authentication, @RequestBody FacilityRequest facilityRequest,
-                                                Categories category,Facility facility) {
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/facility/create").toUriString());
-        if (authentication == null) {
-            System.out.println("Es necesario que hagas el login");
-            return ResponseEntity.badRequest().body(facility);
-        } else {
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-            System.out.println(userDetails.getUsername());
-            User user = userRepository.getByUsername(userDetails.getUsername());
-            category = categoryRepository.findById(facilityRequest.getCategoryId()).orElseThrow(RuntimeException::new);
-
-            facility = new Facility();
-            facility.setTitle(facilityRequest.getTitle());
-            facility.setDescription(facilityRequest.getDescription());
-            facility.setPricePerHour(facilityRequest.getPricePerHour());
-            facility.getCategories().add(category);
-            facility.setAssistant(user);
-           /*facility.getCategories().add()
-            //System.out.println(username);
-        }
-        return ResponseEntity.created(uri).body(facilityService.addNewFacility(facility));
-    }
-    */
+    /**Permits a user to create a new service*/
     @PreAuthorize("hasRole('FACILITY')")
     @PostMapping("/create")
     public ResponseEntity<Facility> addFacility(Authentication authentication, @RequestBody FacilityRequest facilityRequest,
@@ -146,9 +93,7 @@ public class FacilityController {
         return ResponseEntity.created(uri).body(facilityService.addNewFacility(facility));
     }
 
-
-
-    /**Edita un servicio de la base de datos - works! */
+    /**Permits a user to edit his on service data*/
     @PreAuthorize("hasRole('FACILITY') or hasRole('ADMIN')")
     @PutMapping("/edit")
     public ResponseEntity<Facility> editFacility(@RequestBody Facility facility){
@@ -156,14 +101,16 @@ public class FacilityController {
         return ResponseEntity.created(uri).body(facilityService.updateFacility(facility));
     }
 
-    /**Borra un servicio de la base de datos - works! */
-    @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
+    /**Permits a user to delete a service that don't have a FK with contract*/
+    @PreAuthorize("hasRole('FACILITY') or hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteFacilityById(@PathVariable Long id){
         facilityService.deleteFacilityById(id);
         return ResponseEntity.ok().build();
     }
 
+    /**List all the services of a logged assitant*/
+    @PreAuthorize("hasRole('FACILITY') or hasRole('ADMIN')")
     @GetMapping("/assistant/")
     public List<Facility> userFacilities (Authentication authentication){
         User user = userService.getByUsername(authentication.getName());

@@ -10,6 +10,7 @@ import com.uniquecare.repositories.UserRepository;
 import com.uniquecare.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -41,7 +42,8 @@ public class ContractController {
         this.facilityService = facilityService;
     }
 
-
+    /**Permits a user to send a contract request*/
+    @PreAuthorize("hasRole('USER')")
     @PostMapping( "/requestcontract")
     public ResponseEntity<?> requestContract(Authentication authentication, @RequestBody ContractRequest contractRequest) throws ContractException {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/requestcontract").toUriString());
@@ -53,12 +55,13 @@ public class ContractController {
         if(contractService.existsByClientAndFacilityAndStartAndFinish(contractRequest)) {
             return ResponseEntity.badRequest().body("The request already exists");
         }
-
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         System.out.println(userDetails.getUsername());
         return ResponseEntity.created(uri).body(contractService.createContractRequest(contractRequest));
     }
 
+    /**Permits a user to accept a contract request*/
+    @PreAuthorize("hasRole('FACILITY') or hasRole('ADMIN')")
     @PutMapping("/acceptcontract/{id}")
     public ResponseEntity<?> acceptContract (Authentication authentication,@PathVariable Long id) throws ContractException {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/acceptedcontract").toUriString());
@@ -71,6 +74,8 @@ public class ContractController {
         return ResponseEntity.created(uri).body(contractService.addContract(contract));
     }
 
+    /**Permits a user to decline a contract request*/
+    @PreAuthorize("hasRole('FACILITY') or hasRole('ADMIN')")
     @PutMapping("/declinecontract/{id}")
     public ResponseEntity<?> declineContract(Authentication authentication,@PathVariable Long id) throws ContractException {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/acceptedcontract").toUriString());
@@ -83,7 +88,8 @@ public class ContractController {
         return ResponseEntity.created(uri).body(contractService.addContract(contract));
     }
 
-    /**Lista todos los contractos de la base de datos, sus datos como fechas, assistente y cliente - works! */
+    /**Permits a user to list all his own contracts*/
+    @PreAuthorize("hasRole('FACILITY') or hasRole('ADMIN')")
     @GetMapping("/contract/list")
     public ResponseEntity<?> getContract(Authentication authentication) throws ContractException{
         if (authentication == null) {
@@ -96,31 +102,38 @@ public class ContractController {
         return ResponseEntity.ok().body(contractService.findAllContracts());
     }
 
-    /**Encuentra un contracto cuando le pasas su ID -  works! */
+    /**Find a contract by his id*/
     @GetMapping("/contract/{id}")
     public Contract findContractById(@PathVariable("id") Long id) {
         return contractService.findContractById(id);
     }
 
+    /**Permits a user to edit a contract request if it wasn't previous accepted or declined*/
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PutMapping("/contract/edit/{id}")
     public ResponseEntity<Contract> editContract(@RequestBody ContractRequest contractRequest) throws ContractException {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/contract/edit/{id}").toUriString());
         return ResponseEntity.created(uri).body(contractService.updateContract(contractRequest));
     }
 
-    /**Borra un servicio de la base de datos - works! */
+    /**Permits a user to edit a contract request if it wasn't previous accepted*/
+    @PreAuthorize("hasRole('USER') or hasRole('FACILITY') or hasRole('ADMIN')")
     @DeleteMapping("/contract/delete/{id}")
     public ResponseEntity<Void> deleteContractById(@PathVariable Long id){
         contractService.deleteContractById(id);
         return ResponseEntity.noContent().build();
     }
 
+    /**List all the contracts request done for a user*/
+    @PreAuthorize("hasRole('FACILITY') or hasRole('ADMIN')")
     @GetMapping("/contract/request/")
     public List<Contract> userRequests (Authentication authentication){
         User user = userService.getByUsername(authentication.getName());
         return contractService.findAllByFacilityAssistant(user);
     }
 
+    /**List all the contracts request received by an assistant*/
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("/contract/clientrequest/")
     public List<Contract> clientRequests (Authentication authentication){
         User user = userService.getByUsername(authentication.getName());
@@ -146,26 +159,6 @@ public class ContractController {
 
 
 
-/*@PostMapping("/contract/add")
-    public ResponseEntity<Contract> addContract(Authentication authentication, @RequestBody ContractRequest contractRequest) {
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/contract/add").toUriString());
-        if (authentication == null) {
-            System.out.println("Es necesario que hagas el login");
-        } else {
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-            System.out.println(userDetails.getUsername());
-            User user = userRepository.getByUsername(userDetails.getUsername());
-            Facility facility = facilityService.findFacilityById(contractRequest.getFacility_id());
-            Contract contract = new Contract();
-            contract.setStart(contractRequest.getStart());
-            contract.setFinish(contractRequest.getFinish());
-            contract.setTotalPrice(contractRequest.getTotalPrice());
-            contract.setFacility(facility);
-            contract.setClient(user);
-            return ResponseEntity.created(uri).body(contractService.addContract(contract));
-        }
-        return ResponseEntity.internalServerError().build();
-    }*/
 
 
 

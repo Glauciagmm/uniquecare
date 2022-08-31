@@ -77,10 +77,3 @@ public class FacilityServiceImpl implements IFacilityService {
 
 
 }
-
-   /* @Override
-    public Boolean existsByClientAndFacilityAndStartAndFinish(ContractRequest contractRequest) {
-        User client = userService.getUserById(contractRequest.getClient_id());
-        Facility facility = facilityService.findFacilityById(contractRequest.getFacility_id());
-        return contractRepository.existsByClientAndFacilityAndStartAndFinish(client, facility, contractRequest.getStart(), contractRequest.getFinish());
-    }*/
