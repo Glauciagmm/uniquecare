@@ -2,9 +2,7 @@ package com.uniquecare.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uniquecare.models.Categories;
-import com.uniquecare.models.ERole;
 import com.uniquecare.models.Facility;
-import com.uniquecare.models.Role;
 import com.uniquecare.services.FacilityServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,13 +17,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -97,7 +92,6 @@ class FacilityControllerTest {
         verify(facilityService, times(1)).getAllFacilities();
     }
 
-    //Mirar como passar el get principal
     @WithMockUser
     @Test
     void doentExpectToAddFacilityWithoutAuthentication() throws Exception{
@@ -123,7 +117,7 @@ class FacilityControllerTest {
         mockMvc.perform((MockMvcRequestBuilders.delete("/api/facility/delete/"+facility1.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(facility1))))
-                        .andExpect(status().isNoContent());
+                        .andExpect(status().isOk());
         verify(facilityService, times(1)).deleteFacilityById(any());
     }
 }

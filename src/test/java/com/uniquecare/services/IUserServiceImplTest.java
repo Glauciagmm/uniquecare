@@ -8,6 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,10 +30,6 @@ class IUserServiceImplTest {
     void getUsers() {
         underTest.getUsers();
         verify(userRepository).findAll();
-    }
-
-    @Test
-    void setFacilityRole() {
     }
 
     @Test
@@ -61,49 +61,15 @@ class IUserServiceImplTest {
                 "Barcelona",
                 "123789456"
         );
+        underTest.saveUser(user);
+        given(userRepository.findByUsername(user.getUsername())).willReturn(Optional.of(user));
         underTest.getByUsername(user.getUsername());
         verify(userRepository).findByUsername("Mesquita");
-    }
-
-    @Test
-    void getContractByUserId() {
-    }
-
-    @Test
-    void findByUsername() {
-    }
-
-    @Test
-    void saveUser() {
-    }
-
-    @Test
-    void updateUser() {
     }
 
     @Test
     void deleteUserById() {
         underTest.deleteUserById(1L);
         verify(userRepository).deleteById(1L);
-    }
-
-    @Test
-    void getUser() {
-    }
-
-    @Test
-    void getContractByAssistantId() {
-    }
-
-    @Test
-    void getByUsername() {
-    }
-
-    @Test
-    void existsByUsername() {
-    }
-
-    @Test
-    void existsByEmail() {
     }
 }
